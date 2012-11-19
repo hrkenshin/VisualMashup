@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+	<ModulePrefs title="__MSG_title__" description="__MSG_description__"
+		author="Hyoungwook K." author_email="hyoungwookk.feedback+timeandweather@gmail.com"
+		screenshot="__MSG_screenshot__" thumbnail="__MSG_thumbnail__">
+		<Locale	messages="http://www.google.com/ig/modules/timeandweather/timeandweather_content/ALL_ALL.xml" />
+		<Locale lang="ko" messages="http://www.google.com/ig/modules/timeandweather/timeandweather_content/ko_ALL.xml" />
+		<Require feature="pubsub" />
+		<Require feature="dynamic-height" />
+		<Require feature="setprefs" />		 
+		<Preload href="__UP_preload_url__" />
+	</ModulePrefs>
+	<UserPref name="city" datatype="hidden" default_value="__MSG_default_city__"/>
+	<UserPref name="DST" display_name="__MSG_DST__" datatype="bool" default_value="false"/>
+	<UserPref name="clock" display_name="__MSG_clock__" datatype="enum" default_value="0">
+		<EnumValue value="0" display_value="__MSG_analog__" />
+		<EnumValue value="1" display_value="__MSG_digital__" />
+	</UserPref>
+	<UserPref name="preload_url" datatype="hidden" default_value="__MSG_weather_url____MSG_preload_location__"/>
+	<UserPref name="solar_radiation" datatype="string" default_value="일사량"/>
+	<!-- var mydata=[{key:"city",value:this.d[this.c].P[this.e]},{key:"DST",value:"aa"+this.d[this.c].P[this.e]},{key:"clock",value:"bb"+this.d[this.c].P[this.e]},{key:"preload_url",value:"cc"+this.d[this.c].P[this.e]},{key:"solar_radiation",value:"dd"+this.d[this.c].P[this.e]}];gadgets.pubsub.publish("uengine.mashup",mydata); -->
+	<Content type="html" view="home,default">
+		<![CDATA[ 
+		<style>#tw___MODULE_ID__{height:115px;margin:5px 5px 0;overflow:hidden}#tw___MODULE_ID__ *{margin:0;padding:0;overflow:hidden}#tw___MODULE_ID__ .left{float:left}#tw___MODULE_ID__.digital .left .region{width:140px;height:22px}#tw___MODULE_ID__.analog .left .region{width:70px;height:22px}#tw___MODULE_ID__ .left .select{width:100%}#tw___MODULE_ID__ .clock{position:relative;width:138px;height:64px;margin:5px 0;border:1px solid #9ac7fe}#tw___MODULE_ID__ .clock-n{border-color:#494949}#tw___MODULE_ID__ .clock .top{height:20px;border-top:1px solid #d7e0e7;border-bottom:1px solid #b9d9ff;background-color:#ecf5fe}#tw___MODULE_ID__ .clock .top-n{border-top-color:#7f7f7f;border-bottom-color:#707070;background-color:#8b8b8b}#tw___MODULE_ID__ .clock .top .meridiem{display:inline;float:left;margin:3px 0 0 9px;font:12px arial;font-weight:bold;color:#7cb8ff}#tw___MODULE_ID__ .clock .top .meridiem-n{color:#e9e9e9}#tw___MODULE_ID__ .clock .top .sun{display:inline;float:right;width:20px;height:20px;background:transparent url(http://www.google.com/ig/modules/timeandweather/timeandweather_content/moonsun.gif) no-repeat scroll 0}#tw___MODULE_ID__ .clock .h{height:0;border-top:21px solid #add2ff;border-bottom:21px solid #9dc8fd;font-size:0;line-height:0}#tw___MODULE_ID__ .clock .h-n{border-top-color:#575757;border-bottom-color:#494949}#tw___MODULE_ID__ .clock .time{position:absolute;left:5px;top:25px;width:126px;font:33px arial;color:#fff;text-align:right}#tw___MODULE_ID__ .left .date{font:11px dotum;text-align:center}#tw___MODULE_ID__ ol{list-style-type:none}#tw___MODULE_ID__ ol li{float:left;margin-left:2px}#tw___MODULE_ID__ .weather .wd-a{margin:12px 0 2px;font:11px dotum;text-align:center}#tw___MODULE_ID__ .weather .wd-b{margin:34px 0 2px;font:11px dotum;text-align:center}#tw___MODULE_ID__ .weather .wb{padding:1px;margin:0 1px;border:1px solid #ccc}#tw___MODULE_ID__ .weather .wi-a{width:62px;height:62px;background:transparent url(http://www.google.com/ig/modules/timeandweather/timeandweather_content/weather.gif) no-repeat scroll 0}#tw___MODULE_ID__ .weather .wi-b{width:40px;height:40px;background:transparent url(http://www.google.com/ig/modules/timeandweather/timeandweather_content/weather.gif) no-repeat scroll 0}#tw___MODULE_ID__ .weather .wt{margin-top:5px;font:11px tahoma;text-align:center}#tw___MODULE_ID__ .bg-view{position:relative;width:70px;height:70px;margin:3px 0}#tw___MODULE_ID__ .view{position:relative;width:52px;height:52px;left:9px;top:9px}#tw___MODULE_ID__ .aclock{background:transparent url(http://www.google.com/ig/modules/timeandweather/timeandweather_content/time.png) no-repeat scroll 0;width:780px;height:1110px}* html #tw___MODULE_ID__ .aclock{background-image:none;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src=http://www.google.com/ig/modules/timeandweather/timeandweather_content/time.png,sizingMethod=crop)}#tw___MODULE_ID__ .aclock.bg{position:absolute;top:-1040px}#tw___MODULE_ID__ .aclock.hand{position:absolute;cursor:default}#tw___MODULE_ID__ .aclock.cab{position:absolute;left:-140px;top:-1040px}#m___MODULE_ID___b{padding:5px 5px 10px}</style>
+		<div class=analog id=tw___MODULE_ID__>
+		<div class=left>
+		<div class=region>
+		<select class=select id=select___MODULE_ID__></select>
+		</div>
+		<div class=clock id=clock___MODULE_ID__ style=display:none>
+		<div class=top id=top___MODULE_ID__>
+		<div class=meridiem id=meridiem___MODULE_ID__>AM</div>
+		<div class=sun id=sun___MODULE_ID__></div>
+		</div>
+		<div class=h id=two_colors___MODULE_ID__></div>
+		<div class=time id=time___MODULE_ID__></div>
+		</div>
+		<div class=bg-view id=aclock___MODULE_ID__>
+		<div class="aclock bg" id=aclock_bg___MODULE_ID__></div>
+		<div class=view>
+		<div class="aclock hand" id=aclock_h___MODULE_ID__></div>
+		<div class="aclock hand" id=aclock_m___MODULE_ID__></div>
+		<div class="aclock hand" id=aclock_s___MODULE_ID__></div>
+		</div>
+		<div class="aclock cab"></div>
+		</div>
+		<div class=date id=date___MODULE_ID__></div>
+		</div>
+		<ol class=weather id=weather___MODULE_ID__></ol>
+		</div>
+		<script src="http://www.google.com/ig/f/bHCgxx1YY_0/modules/timeandweather/clock_compiled.js"></script>
+		<script>var tw={};tw.Country=function(a,d,b,c,e,f){this.S=a;this.i=d;this.P=b;this.Z=c;this.T=e;this.W=f};
+		tw.Controller=function(a){this.X=_gel("tw_"+a);this.Q=_gel("date_"+a);this.U=_gel("time_"+a);this.k=_gel("meridiem_"+a);this.s=_gel("sun_"+a);this.l=_gel("clock_"+a);this.H=_gel("top_"+a);this.B=_gel("two_colors_"+a);this.g=_gel("select_"+a);this.K=_gel("weather_"+a);this.N=_gel("aclock_"+a);this.M=_gel("aclock_bg_"+a);this.t=_gel("aclock_h_"+a);this.u=_gel("aclock_m_"+a);this.v=_gel("aclock_s_"+a);this.d=[];this.a=new _IG_Prefs(a);this.L=this.a.getBool("DST");this.f=this.a.getInt("clock");this.e=
+		this.c=0;if(this.f){this.X.className="digital";this.N.style.display="none";this.l.style.display="block"}this.j=-1;var d=this.a.getString("city"),b=this.a.getMsg("countries").split("|"),c=0,e=[];for(c=0;c<b.length;++c){a=b[c];var f=parseInt(this.a.getMsg(a+"_timezone"),10),g=this.a.getMsg(a+"_cities").split("|"),l=this.a.getMsg(a+"_cities_names").split("|"),h=this.a.getMsg(a+"_lat_long").split("|"),m=this.a.getMsg(a+"_cities_timezones").split("|");this.d.push(new tw.Country(a,f,g,l,h,m));f=document.createElement("optgroup");
+		f.label=this.a.getMsg(a);a=g.length;for(h=0;h<a;++h){m=c*1E3+h;var i=document.createElement("option");i.value=m;i.text=l[h];i.innerText=l[h];if(g[h]==d){i.selected="selected";this.c=c;this.e=h}f.appendChild(i);e[g[h]]=i}this.g.appendChild(f)}this.A=new hanul.Clock(this.bind(this.z),this.n(),this.f,"__MSG_days_of_week__","__MSG_date_format__");this.Y=this.bind(this.J);this.g.onchange=this.bind(this.q);this.p();var j=this;
+		/*_IG_AddModuleEventHandler(__MODULE_ID__,"unmaximize",
+			function(){
+				var k=j.a.getString("city"),n=j.g.options[j.g.selectedIndex].text;
+				if(k!=n)
+					if(k=e[k]){
+						k.selected="selected";
+						j.q()
+					}
+			}
+		)*/
+		};
+		tw.Controller.prototype.bind=function(a){var d=this,b=[].slice.call(arguments,1);return function(){var c=b.concat([].slice.call(arguments));return a.apply(d,c)}};tw.Controller.prototype.n=function(){var a=this.d[this.c].i==25?this.d[this.c].W[this.e]:this.d[this.c].i;this.L&&++a;return a};
+		tw.Controller.prototype.z=function(a,d,b,c,e){this.Q.innerHTML=a;a=b>=6&&b<18;if(this.f){this.U.innerHTML=d;this.k.innerHTML=b<12?"AM":"PM";c=a?b-6:(b+6)%12;c=70-c*5;b=Math.floor(b/6)%2?b%6:5-b%6;b=10-b*2;this.s.style.marginRight=c+"px";this.s.style.marginTop=b+"px";if(this.j!=a){this.s.style.backgroundPosition=-60*a+"px 0";if(a){this.l.className="clock";this.k.className="meridiem";this.H.className="top";this.B.className="h"}else{this.l.className="clock clock-n";this.k.className="meridiem meridiem-n";
+		this.H.className="top top-n";this.B.className="h h-n"}this.j=a}}else{if(this.j!=a){this.M.style.left=-70*!a+"px";this.j=a}d=-(e%15)*52;e=Math.floor(e/15)*52-156;var f=-(c%15)*52,g=Math.floor(c/15)*52-364;c=-(b%3*5+Math.floor(c/12))*52;b=Math.floor(b%12/3)*52-572;if(!a){g-=416;b-=416}this.v.style.left=d+"px";this.v.style.top=e+"px";this.u.style.left=f+"px";this.u.style.top=g+"px";this.t.style.left=c+"px";this.t.style.top=b+"px"}};
+		tw.Controller.prototype.ftoc=function(a){return Math.floor((a-32)*10/18)};tw.Controller.prototype.p=function(){var a=this.d[this.c],d=[];d.push("__MSG_weather_url__");d.push(",,");d.push(a.S);d.push(",");d.push(a.T[this.e]);d=d.join("");_IG_FetchXmlContent(d,this.Y,{refreshInterval:600});return d};
+		tw.Controller.prototype.J=function(a){if(!a||typeof a!="object"||a.firstChild==null)this.K.innerHTML="";else{var d=__MSG_celsius__,b=[],c={Clear:0,"Mostly Sunny":1,"Partly Sunny":1,"Mostly Cloudy":2,Cloudy:3,"Chance of Rain":4,Rain:4,"Heavy Rain":5,"Chance of Storm":6,Thunderstorm:6,"Chance of Snow":7,Snow:7,"Heavy Snow":8,Haze:9,Fog:10},e=a.getElementsByTagName("current_conditions");if(e[0]){b.push('<li><div class="wd-a">__MSG_current__</div><div class="wb"><div class="wi-a" style="background-position: ');
+		var f=e[0].getElementsByTagName("condition");f=f[0].getAttribute("data");if(f=c[f]){b.push(f*-62);b.push("px")}else b.push(0);b.push(' 0"></div></div><div class="wt">');f=e[0].childNodes[1].getAttribute("data");d?b.push(this.ftoc(parseInt(f,10))):b.push(_hesc(f));b.push("\u00b0 | ");b.push(_hesc(e[0].childNodes[3].getAttribute("data").substr(10)));b.push("</div></li>")}a=a.getElementsByTagName("forecast_conditions");e=1;for(var g;g=a[e];++e){b.push('<li><div class="wd-b">');b.push(_hesc(this.A._getDay(e)));
+		b.push('</div><div class="wb"><div class="wi-b" style="background-position: ');f=g.getElementsByTagName("condition")[0].getAttribute("data");if(f=c[f]){b.push(f*-40);b.push("px")}else b.push(0);b.push(' -62px"></div></div><div class="wt">');f=g.getElementsByTagName("low")[0].getAttribute("data");d?b.push(this.ftoc(parseInt(f,10))):b.push(_hesc(f));b.push("\u00b0 | ");f=g.getElementsByTagName("high")[0].getAttribute("data");d?b.push(this.ftoc(parseInt(f,10))):b.push(_hesc(f));b.push("\u00b0</div></li>")}this.K.innerHTML=
+		b.join("")}};tw.Controller.prototype.q=function(){var a=this.g.value;this.c=Math.floor(a/1E3);this.e=a%1E3;a=this.p();this.A._setTimezone(this.n());this.a.set("preload_url",a);
+		
+		var mydata=[{key:"city",value:this.d[this.c].P[this.e]},{key:"DST",value:"aa"+this.d[this.c].P[this.e]},{key:"clock",value:"bb"+this.d[this.c].P[this.e]},{key:"preload_url",value:"cc"+this.d[this.c].P[this.e]},{key:"solar_radiation",value:"dd"+this.d[this.c].P[this.e]}];
+		gadgets.pubsub.publish("uengine.mashup",mydata);
+		
+		this.a.set("city",this.d[this.c].P[this.e])};
+		(function(){var a=new tw.Controller(__MODULE_ID__)})();</script>
+		
+		
+		]]>
+	</Content>
+	<Content type="html" view="canvas">
+		<![CDATA[ 
+		<style>#tw___MODULE_ID__ .region{display:inline;margin:6px 15px 10px 10px}#tw___MODULE_ID__ .clock{margin-top:9px}#tw___MODULE_ID__ .time{margin-left:5px}#tw___MODULE_ID__ .f{font:bold 13px Tahoma;color:#333}#tw___MODULE_ID__ .l{float:left}#tw___MODULE_ID__ .c{clear:both;width:100%;border-top:1px solid #ccc;font-size:0}#tw___MODULE_ID__ .weather{width:100%;height:970px;padding:0;margin:0;border:0}</style>
+		<div id=tw___MODULE_ID__>
+		<div class="region l">
+		<select class=select id=select___MODULE_ID__></select>
+		</div>
+		<div class="clock l">
+		<div class="f l" id=meridiem___MODULE_ID__></div>
+		<div class="time f l" id=time___MODULE_ID__></div>
+		</div>
+		<div class=c></div>
+		<iframe class=weather frameborder=0 id=weather___MODULE_ID__></iframe>
+		</div>
+		<script src="http://www.google.com/ig/f/bHCgxx1YY_0/modules/timeandweather/clock_compiled.js"></script>
+		<script>var tw={};tw.Country=function(a,b,e,c,d,g){this.L=a;this.g=b;this.C=e;this.M=c;this.G=d;this.J=g};
+		tw.Controller=function(a){this.H=_gel("time_"+a);this.A=_gel("meridiem_"+a);this.n=_gel("select_"+a);this.K=_gel("weather_"+a);this.d=[];this.b=new _IG_Prefs(a);this.z=this.b.getBool("DST");this.k=this.b.getInt("clock");this.e=this.c=0;this.N=-1;var b=this.b.getString("city"),e=this.b.getMsg("countries").split("|"),c=0;for(c=0;c<e.length;++c){a=e[c];var d=parseInt(this.b.getMsg(a+"_timezone"),10),g=this.b.getMsg(a+"_cities").split("|"),i=this.b.getMsg(a+"_cities_names").split("|"),f=this.b.getMsg(a+
+		"_lat_long").split("|"),j=this.b.getMsg(a+"_cities_timezones").split("|");this.d.push(new tw.Country(a,d,g,i,f,j));d=document.createElement("optgroup");d.label=this.b.getMsg(a);a=g.length;for(f=0;f<a;++f){j=c*1E3+f;var h=document.createElement("option");h.value=j;h.text=i[f];h.innerText=i[f];if(g[f]==b){h.selected="selected";this.c=c;this.e=f}d.appendChild(h)}this.n.appendChild(d)}this.D=new hanul.Clock(this.bind(this.q),this.l(),this.k,"__MSG_days_of_week__","__MSG_date_format__");this.n.onchange=
+		this.bind(this.u);this.h()};tw.Controller.prototype.bind=function(a){var b=this,e=[].slice.call(arguments,1);return function(){var c=e.concat([].slice.call(arguments));return a.apply(b,c)}};tw.Controller.prototype.l=function(){var a=this.d[this.c].g==25?this.d[this.c].J[this.e]:this.d[this.c].g;this.z&&++a;return a};tw.Controller.prototype.q=function(a,b,e,c,d){this.H.innerHTML=b;this.A.innerHTML=e<12?"AM":"PM"};tw.Controller.prototype.i=function(a){var b=a.length-6;return a.substr(0,b)+"."+a.substr(b)};
+		tw.Controller.prototype.h=function(){var a=this.d[this.c].G[this.e].split(","),b=[];b.push("http://igoogle.wunderground.com/cgi-bin/findweather/getForecast?unit=SI&hl=__MSG_hl__&query=");b.push(this.i(a[0]));b.push(",");b.push(this.i(a[1]));this.K.src=b.join("");_IG_AdjustIFrameHeight()};tw.Controller.prototype.u=function(){var a=this.n.value;this.c=Math.floor(a/1E3);this.e=a%1E3;a=this.h();this.D._setTimezone(this.l());this.b.set("preload_url",a);this.b.set("city",this.d[this.c].C[this.e])};
+		(function(){var a=new tw.Controller(__MODULE_ID__)})();</script>
+		]]>
+	</Content>
+</Module>

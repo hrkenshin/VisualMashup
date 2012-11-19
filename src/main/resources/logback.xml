@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>\n[%-5level] [%d{yyyy-MM-dd HH:mm:ss}] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${filtering.vm.log.file}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${filtering.vm.log.file}.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>\n[%-5level] [%d{yyyy-MM-dd HH:mm:ss}] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.uengine.visualmashup" level="${filtering.vm.log.level}"/>
+
+    <logger name="java.sql" level="${filtering.vm.log.level}"/>
+
+    <logger name="org.apache.ibatis" level="${filtering.vm.log.level}"/>
+
+    <root level="info">
+        <appender-ref ref="${filtering.vm.log.appender}"/>
+    </root>
+
+</configuration>

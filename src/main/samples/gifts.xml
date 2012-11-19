@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module> 
+  <ModulePrefs title="Social Mashup Tutorial"> 
+    <Require feature="opensocial-data"/> 
+    <Require feature="opensocial-templates"/> 
+    <Require feature="osapi"/> 
+    <Require feature="views"/> 
+  </ModulePrefs> 
+  <Content type="html" view="profile"> 
+    <![CDATA[
+    <!-- Specify all the data the app will need: the viewer, the viewer's friends, the list of gifts, and the list of gifts the viewer has sent --> 
+    <script xmlns:os="http://ns.opensocial.org/2008/markup" type="text/os-data"> 
+      <os:OwnerRequest key="owner" fields="displayName"/>
+      <os:PeopleRequest key="ownerFriends" userId="@owner" groupId="@friends" fields="displayName" count="100"/>
+      <os:HttpRequest key="gifts" format="json" href="http://graargh.returnstrue.com/lane/opensocial/v09/gifts.json" refreshInterval="0"/>
+      <!-- TODO I should be able to use ViewerRequest instead if PersonAppDataRequest: 
+           <os:ViewerRequest key="giftsGiven" fields="appdata.transactions" />
+      -->
+      <!-- TODO I shouldn't have to specify the appId attribute, but I get a permission error if it's omitted.  This tag is not in the spec anyway, so maybe it doesn't matter. --> 
+      <os:PersonAppDataRequest key="giftsGiven" userId="@owner" fields="transactions" appId="@app"/>
+    </script> 
+    <script type="text/os-template" xmlns:os="http://ns.opensocial.org/2008/markup">  
+      <span if="${osx:parseJson(giftsGiven[owner.id].transactions) == null}">
+        ${owner.displayName} hasn't given any gifts yet.<br/>
+      </span>
+      <span if="${osx:parseJson(giftsGiven[owner.id].transactions) != null}">
+        ${owner.displayName} has sent...
+        <ul>
+          <li repeat="${osx:parseJson(giftsGiven[owner.id].transactions)}" var="transaction">        
+            <!-- Lookup the gift's name based on it's user ID -->
+            <span repeat="${gifts.content}" var="gift" if="${transaction.giftId == gift.id}">
+              ${gift.name}
+            </span>
+            to
+            <!-- Lookup the recipient's name based on their user ID -->
+            <span repeat="${ownerFriends.list}" var="person" if="${transaction.recipientId == person.id}">
+              ${person.displayName}
+            </span>
+          </li>
+        </ul>
+      </span>
+    </script> 
+    ]]>
+  </Content>  
+  <Content type="html" view="canvas, default"> 
+    <![CDATA[
+ 
+<!-- Specify all the data the app will need: the viewer, the viewer's friends, the list of gifts, and the list of gifts the viewer has sent --> 
+<script xmlns:os="http://ns.opensocial.org/2008/markup" type="text/os-data"> 
+  <os:ViewerRequest key="viewer"/>
+  <os:PeopleRequest key="viewerFriends" userId="@viewer" groupId="@friends" fields="displayName" count="100"/>
+  <os:HttpRequest key="gifts" format="json" href="http://graargh.returnstrue.com/lane/opensocial/v09/gifts.json" refreshInterval="0"/>
+  <!-- TODO I should be able to use ViewerRequest instead if PersonAppDataRequest: 
+       <os:ViewerRequest key="giftsGiven" fields="appdata.transactions" />
+  -->
+  <!-- TODO I shouldn't have to specify the appId attribute, but I get a permission error if it's omitted.  This tag is not in the spec anyway, so maybe it doesn't matter. --> 
+  <os:PersonAppDataRequest key="giftsGiven" userId="@viewer" fields="transactions" appId="@app"/>
+</script> 
+ 
+<!-- This is the template for the entire canvas view --> 
+<script type="text/os-template" xmlns:os="http://ns.opensocial.org/2008/markup" xmlns:osx="http://ns.opensocial.org/2009/extensions">  
+ <div id="main">
+  <!-- The gift-giving selection form -->
+  <form id='gift_form'>
+    Give
+    <select id="gift">
+      <option repeat="${gifts.content}" var="gift" value="${gift.id}">
+        ${gift.name}
+      </option>
+    </select>
+    to
+    <select id="person">
+      <option repeat="${viewerFriends.list}" var="person" value="${person.id}">
+        ${person.displayName}
+      </option>
+    </select>
+    <a href='javascript:void(0);' onclick='giveGift();'>Give!</a>
+  </form>
+    
+  <!-- The list of gifts given -->
+  <div id="giftsGivenDiv">
+    <span if="${osx:parseJson(giftsGiven[viewer.id].transactions) == null}">
+      You haven't given any gifts yet.<br/>
+    </span>
+    <span if="${osx:parseJson(giftsGiven[viewer.id].transactions) != null}">
+      Gifts you have given:
+      <ul>
+        <li repeat="${osx:parseJson(giftsGiven[viewer.id].transactions)}" var="transaction">        
+          <!-- Lookup the recipient's name based on their user ID -->
+          <span repeat="${viewerFriends.list}" var="person" if="${transaction.recipientId == person.id}">
+            ${person.displayName}
+          </span>
+          received
+          <!-- Lookup the gift's name based on it's user ID -->
+          <span repeat="${gifts.content}" var="gift" if="${transaction.giftId == gift.id}">
+            ${gift.name}
+          </span>
+        </li>
+      </ul>
+    </span>
+  </div>
+ </div>
+</script> 
+  
+<!-- Debug - Show all the data returned from the data pipelining calls --> 
+<script type="text/os-template" xmlns:os="http://ns.opensocial.org/2008/markup">  
+  <hr/>
+  <div style="font-size:10pt">
+    <a href="javascript:void(0);" onclick="clearAppData()">Clear AppData</a> | 
+    <a href="javascript:void(0);" onclick="toggle('debug')">Show/Hide Debug</a>
+  </div>
+  <div id="debug" style="color:#999; display:none; font-size:10pt">
+    Transactions:
+    <ul>
+      <li repeat="${osx:parseJson(giftsGiven[viewer.id].transactions)}" var="transaction">
+        recipientId: ${transaction.recipientId}, giftId: ${transaction.giftId}
+      </li>
+    </ul>
+    Gifts: 
+    <ul>
+      <li repeat="${gifts.content}" var="gift">
+        id: ${gift.id}, name: ${gift.name}
+      </li>
+    </ul>
+    Viewer Friends:
+    <ul>
+      <li repeat="${viewerFriends.list}" var="person">
+        id: ${person.id}, name: ${person.displayName}
+      </li>
+    </ul>
+  </div>
+</script> 
+ 
+<script type="text/javascript"> 
+function init() {
+  
+  var context = opensocial.data.getDataContext();
+  if (context.getDataSet('viewer').code==401) {
+    var text = 'You have to install this app before you can give any gifts!';
+    document.getElementById('main').innerHTML = text;
+  }
+  
+  // Debug - log all the data from the data pipelining calls
+  gadgets.log(context.getDataSet('viewer'));
+  gadgets.log(context.getDataSet('viewerFriends'));
+  gadgets.log(context.getDataSet('giftsGiven'));
+  gadgets.log(context.getDataSet('gifts'));  
+}
+ 
+function getTransactions() {
+  var context = opensocial.data.getDataContext(); 
+  var giftsGiven = context.getDataSet('giftsGiven');
+  var viewer = context.getDataSet('viewer');
+  if (!giftsGiven[viewer.id]) {
+    var transactions = [];
+  } else {
+    var jsonString = giftsGiven[viewer.id].transactions;
+    var transactions = gadgets.json.parse(jsonString);
+  }
+  gadgets.log("transactions:");
+  gadgets.log(transactions);
+  return transactions;
+}
+ 
+function addTransaction(recipientId, giftId, callback) {
+  var newTransaction = {
+    'recipientId': recipientId,
+    'giftId': giftId
+  }
+  transactions = getTransactions();
+  transactions.push(newTransaction)
+  var appdata = {
+    'transactions': gadgets.json.stringify(transactions),
+  }
+  gadgets.log('appdata');
+  gadgets.log(appdata);
+ 
+  //Update the transactions in app data
+  //TODO: Should not have to include 'keys' or 'fields' properties
+  osapi.appdata.update({data: appdata, 
+                        appId: "@app", 
+                        keys:['transactions'], 
+                        fields:['transactions']}).execute(callback);
+ 
+}
+ 
+function reload() {
+  gadgets.log("Loading canvas");
+  var canvas = gadgets.views.getSupportedViews()["canvas"];
+  gadgets.views.requestNavigateTo(canvas, {unique:new Date().getTime()});
+}
+ 
+function giveGift() {  
+  //Update the transactions and reload the canvas view
+  addTransaction(document.getElementById('person').value,
+                 document.getElementById('gift').value,
+                 reload);
+}
+ 
+function clearAppData() {
+  osapi.appdata.delete({keys: ['transactions'], appId: "@app"}).execute(reload);
+}
+ 
+function toggle(elementName) {
+  var element = document.getElementById(elementName);
+  if (element.style.display=="none") {
+    element.style.display="block";  
+  } else {
+    element.style.display="none";
+  }
+}
+ 
+gadgets.util.registerOnLoadHandler(init);
+ 
+</script> 
+ 
+    ]]>
+  </Content> 
+</Module>

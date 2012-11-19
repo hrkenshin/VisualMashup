@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+    <ModulePrefs title="">
+        <Require feature="pubsub-2">
+            <Param name="topics">
+                <![CDATA[
+                <Topic title="In" name="transformer.in.__MODULE_ID__" description="In" subscribe="true"/>
+                ]]>
+            </Param>
+            <Param name="topics">
+                <![CDATA[
+                <Topic title="Out" name="transformer.out.__MODULE_ID__" description="Out" publish="true"/>
+                ]]>
+            </Param>
+        </Require>
+        <Require feature="setprefs"/>
+        <Require feature="dynamic-height"/>
+    </ModulePrefs>
+    <UserPref name="transformer" display_name="Transformer" default_value="{type:'string',operator:'bypass'}"
+              datatype="hidden"/>
+    <Content type="html"><![CDATA[
+        <style type="text/css">
+            table {
+                width: 100%;
+                border: 0;
+                line-height: 14px;
+            }
+
+            #type_custom table {
+                width: 100%;
+            }
+
+            table td {
+                background: #DFE8F6;
+                font-size: 12px;
+            }
+
+            .textInput {
+                width: 120px;
+            }
+
+            .textareaInput {
+                width: 225px;
+                height: 200px;
+            }
+
+            .hide {
+                visibility: hidden;
+                display: none;
+            }
+
+            .show {
+                visibility: visible;
+                display: block;
+            }
+        </style>
+        <script type="text/javascript">
+            var prefs = new gadgets.Prefs();
+
+            var typeArray = ['string', 'number', 'custom'];
+            var operatorArray = {
+                'string': ['bypass', 'attach', 'prefix', 'suffix', 'toUpperCase', 'toLowerCase', 'replace',
+                'substr', 'substring', 'trim'],
+                'number': ['simpleMath'],
+                'custom': ['jscript']
+            };
+
+            function bypass(value) {
+                return value;
+            }
+
+            function attach(value, param) {
+                param = _convert(param);
+                return param.prefix + value + param.suffix;
+            }
+
+            function prefix(value, param) {
+                param = _convert(param);
+                return param.prefix + value;
+            }
+
+            function suffix(value, param) {
+                param = _convert(param);
+                return value + param.suffix;
+            }
+
+            function toUpperCase(value) {
+                return value.toUpperCase();
+            }
+
+            function toLowerCase(value) {
+                return value.toLowerCase();
+            }
+
+            function replace(value, param) {
+                param = _convert(param);
+                return value.replace(param.regexp, param.replace);
+            }
+
+            function substr(value, param) {
+                param = _convert(param);
+                return value.substr(param.start, param.length);
+            }
+
+            function substring(value, param) {
+                param = _convert(param);
+                return value.substring(param.from, param.to);
+            }
+
+            function trim(value) {
+                return value.trim();
+            }
+
+            function simpleMath(value, param) {
+                param = _convert(param);
+                switch(param.op) {
+                    case 'add':
+                        return parseFloat(value) + parseFloat(param.other);
+                        break;
+                    case 'subtract':
+                        return value - param.other;
+                        break;
+                    case 'multiply':
+                        return value * param.other;
+                        break;
+                    case 'divide':
+                        return value / param.other;
+                        break;
+                    case 'modulo':
+                        return value % param.other;
+                        break;
+                    case 'power':
+                        return Math.pow(value, param.other);
+                        break;
+                }
+            }
+
+            function jscript(value, param) {
+                param = _convert(param);
+                return ( new Function(param.script) )(value);
+            }
+
+            /**
+             * XML 스타일의 JSON Object {'@name':'name', '$':value} 형태를 {'name':value} 형태로 변환한다.
+             */
+            function _convert(xmlStyleParams) {
+                var param = {};
+                if(xmlStyleParams) {
+                    for(var i=0; i<xmlStyleParams.length; i++) {
+                        param[xmlStyleParams[i]['@name']] = xmlStyleParams[i]['$'];
+                    }
+                }
+
+                return param;
+            }
+
+            /**
+             * @private
+             * Transformer 가젯 랜더링시 UserPref 통해 설정된 값으로 Transformer 정보를 설정한다.
+             */
+            function _setTransformer() {
+                var transformerStr = gadgets.util.unescapeString(prefs.getString("transformer"));
+                var transformer = eval("(" + transformerStr + ")");
+
+                document.getElementById('type').value = transformer.type;
+                document.getElementById(transformer.type + '_operator').value = transformer.operator;
+
+                _toggleType(transformer.type);
+                _toggleOperator(transformer.type, transformer.operator);
+
+                document.getElementById('jscript_script').value = "var value = arguments[0];\nreturn value;";
+
+                var param = _convert(transformer.param);
+
+                switch(transformer.operator) {
+                    case 'bypass':
+                        break;
+                    case 'attach':
+                        document.getElementById('attach_prefix').value = param.prefix;
+                        document.getElementById('attach_suffix').value = param.suffix;
+                        break;
+                    case 'prefix':
+                        document.getElementById('prefix_prefix').value = param.prefix;
+                        break;
+                    case 'suffix':
+                        document.getElementById('suffix_suffix').value = param.suffix;
+                        break;
+                    case 'toUpperCase':
+                        break;
+                    case 'toLowerCase':
+                        break;
+                    case 'replace':
+                        document.getElementById('replace_regexp').value = param.regexp;
+                        document.getElementById('replace_replace').value = param.replace;
+                        break;
+                    case 'substr':
+                        document.getElementById('substr_start').value = param.start;
+                        document.getElementById('substr_length').value = param.length;
+                        break;
+                    case 'substring':
+                        document.getElementById('substring_from').value = param.from;
+                        document.getElementById('substring_to').value = param.to;
+                        break;
+                    case 'trim':
+                        break;
+                    case 'math':
+                        document.getElementById('math_op').value = param.op;
+                        document.getElementById('math_other').value = param.other;
+                        break;
+                    case 'jscript':
+                        document.getElementById('jscript_script').value = param.script;
+                        break;
+                }
+
+                gadgets.window.adjustHeight();
+            }
+
+            /**
+             * @external
+             * Transformer Operator, Parameter 정보를 Wire 에 적용한다.
+             *
+             * @param {Function} callBack 콜백함수
+             */
+            function _applyTransformer(callBack) {
+                var type = document.getElementById('type').value;
+                var operator = document.getElementById(type + '_operator').value;
+
+                switch(operator) {
+                    case 'bypass':
+                        callBack(type, operator);
+                        break;
+                    case 'attach':
+                        var prefix = document.getElementById('attach_prefix').value;
+                        var suffix = document.getElementById('attach_suffix').value;
+                        callBack(type, operator, [{'@name':'prefix', '$':prefix}, {'@name':'suffix', '$':suffix}]);
+                        break;
+                    case 'prefix':
+                        var prefix = document.getElementById('prefix_prefix').value;
+                        callBack(type, operator, [{'@name':'prefix', '$':prefix}]);
+                        break;
+                    case 'suffix':
+                        var suffix = document.getElementById('suffix_suffix').value;
+                        callBack(type, operator, [{'@name':'suffix', '$':suffix}]);
+                        break;
+                    case 'toUpperCase':
+                        callBack(type, operator);
+                        break;
+                    case 'toLowerCase':
+                        callBack(type, operator);
+                        break;
+                    case 'replace':
+                        var regexp = document.getElementById('replace_regexp').value;
+                        var replace = document.getElementById('replace_replace').value;
+                        callBack(type, operator, [{'@name':'regexp', '$':regexp}, {'@name':'replace', '$':replace}]);
+                        break;
+                    case 'substr':
+                        var start = document.getElementById('substr_start').value;
+                        var length = document.getElementById('substr_length').value;
+                        callBack(type, operator, [{'@name':'start', '$':start}, {'@name':'length', '$':length}]);
+                        break;
+                    case 'substring':
+                        var from = document.getElementById('substring_from').value;
+                        var to = document.getElementById('substring_to').value;
+                        callBack(type, operator, [{'@name':'from', '$':from}, {'@name':'to', '$':to}]);
+                        break;
+                    case 'trim':
+                        callBack(type, operator);
+                        break;
+                    case 'simpleMath':
+                        var op = document.getElementById('simpleMath_op').value;
+                        var other = document.getElementById('simpleMath_other').value;
+                        callBack(type, operator, [{'@name':'op', '$':op}, {'@name':'other', '$':other}]);
+                        break;
+                    case 'jscript':
+                        var script = document.getElementById('jscript_script').value;
+                        callBack(type, operator, [{'@name':'script', '$':script}]);
+                        break;
+                }
+            }
+
+            /**
+             * @private
+             * Type 에 따라 관련 Operator 설정 부분을 show, hide 토글 한다.
+             *
+             * @param {String} type 타입명(string, math...)
+             */
+            function _toggleType(type) {
+                for(var i=0; i<typeArray.length; i++) {
+                    if(typeArray[i] == type) {
+                        document.getElementById('type_' + typeArray[i]).className = 'show';
+                    } else {
+                        document.getElementById('type_' + typeArray[i]).className = 'hide';
+                    }
+                }
+                gadgets.window.adjustHeight();
+            }
+
+            /**
+             * @private
+             * Operator 에 따라 관련 Parameter 설정 부분을 show, hide 토글 한다.
+             *
+             * @param {String} type 타입명(string, math...)
+             * @param {String} operator 함수명
+             */
+            function _toggleOperator(type, operator) {
+                for(var i=0; i<operatorArray[type].length; i++) {
+                    if(operatorArray[type][i] == operator) {
+                        document.getElementById('operator_' + operatorArray[type][i]).className = 'show';
+                    } else {
+                        document.getElementById('operator_' + operatorArray[type][i]).className = 'hide';
+                    }
+                }
+                gadgets.window.adjustHeight();
+            }
+
+            /**
+             * @private
+             * 프레임 Width 를 조절한다.
+             *
+             * @param {Number} width 넓이
+             */
+            function _adjustWidth(width) {
+                var frame = parent.document.getElementById('remote_iframe___MODULE_ID__');
+                frame.setAttribute( 'width', width );
+            }
+
+            gadgets.util.registerOnLoadHandler(_setTransformer);
+
+            function _publishCallback(topic, data, subscriberData) {
+                _applyTransformer(function(type, operator, param) {
+                    gadgets.Hub.publish("transformer.out.__MODULE_ID__", window[operator](data, param));
+                });
+            }
+
+            var subId;
+            gadgets.HubSettings.onConnect = function() {
+                if(subId) gadgets.Hub.unsubscribe(subId);
+                subId = gadgets.Hub.subscribe("transformer.in.__MODULE_ID__", _publishCallback);
+            }
+        </script>
+        <div>
+            <table cellspacing="0">
+                <tr>
+                    <td width="80">Type :</td>
+                    <td>
+                        <select id="type" name="type" onChange="_toggleType(this.value);">
+                            <option value="string">string</option>
+                            <option value="number">number</option>
+                            <option value="custom">custom</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="type_string" class="show">
+            <div>
+                <table cellspacing="0">
+                    <tr>
+                        <td width="80">Operator :</td>
+                        <td>
+                            <select id="string_operator" name="string_operator" onChange="_toggleOperator('string', this.value);">
+                                <option value="bypass">bypass</option>
+                                <option value="attach">attach</option>
+                                <option value="prefix">prefix</option>
+                                <option value="suffix">suffix</option>
+                                <option value="toUpperCase">toUpperCase</option>
+                                <option value="toLowerCase">toLowerCase</option>
+                                <option value="replace">replace</option>
+                                <option value="substr">substr</option>
+                                <option value="substring">substring</option>
+                                <option value="trim">trim</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="operator_bypass" class="show"></div>
+            <div id="operator_attach" class="hide">
+                <table cellspacing="0">
+                    <tr>
+                        <td width="80">Prefix :</td>
+                        <td><input class="textInput" type="text" id="attach_prefix" name="attach_prefix" /></td>
+                    </tr>
+                    <tr>
+                        <td>Suffix :</td>
+                        <td><input class="textInput" type="text" id="attach_suffix" name="attach_suffix" /></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="operator_prefix" class="hide">
+                <table cellspacing="0">
+                    <tr>
+                        <td width="80">Prefix :</td>
+                        <td><input class="textInput" type="text" id="prefix_prefix" name="prefix_prefix" /></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="operator_suffix" class="hide">
+                <table cellspacing="0">
+                    <tr>
+                        <td width="80">Suffix :</td>
+                        <td><input class="textInput" type="text" id="suffix_suffix" name="suffix_suffix" /></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="operator_toUpperCase" class="hide"></div>
+            <div id="operator_toLowerCase" class="hide"></div>
+            <div id="operator_replace" class="hide">
+                <table cellspacing="0">
+                    <tr>
+                        <td width="80">RegExp :</td>
+                        <td><input class="textInput" type="text" id="replace_regexp" name="replace_regexp" /></td>
+                    </tr>
+                    <tr>
+                        <td>Replace :</td>
+                        <td><input class="textInput" type="text" id="replace_replace" name="replace_replace" /></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="operator_substr" class="hide">
+                <table cellspacing="0">
+                    <tr>
+                        <td width="80">Start :</td>
+                        <td><input class="textInput" type="text" id="substr_start" name="substr_start" /></td>
+                    </tr>
+                    <tr>
+                        <td>Length :</td>
+                        <td><input class="textInput" type="text" id="substr_length" name="substr_length" /></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="operator_substring" class="hide">
+                <table cellspacing="0">
+                    <tr>
+                        <td width="80">From :</td>
+                        <td><input class="textInput" type="text" id="substring_from" name="substring_from" /></td>
+                    </tr>
+                    <tr>
+                        <td>To :</td>
+                        <td><input class="textInput" type="text" id="substring_to" name="substring_to" /></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="operator_trim" class="hide"></div>
+        </div>
+
+        <div id="type_number" class="hide">
+            <div>
+                <table cellspacing="0">
+                    <tr>
+                        <td width="80">Operator :</td>
+                        <td>
+                            <select id="number_operator" name="number_operator" onChange="_toggleOperator('number', this.value);">
+                                <option value="simpleMath">simpleMath</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="operator_simpleMath" class="show">
+                <table cellspacing="0">
+                    <tr>
+                        <td width="80">
+                            <select id="simpleMath_op" name="simpleMath_op">
+                                <option value="add">+</option>
+                                <option value="subtract">-</option>
+                                <option value="multiply">*</option>
+                                <option value="divide">/</option>
+                                <option value="modulo">%</option>
+                                <option value="power">^</option>
+                            </select>
+                        </td>
+                        <td><input class="textInput" type="text" id="simpleMath_other" name="simpleMath_other"/></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div id="type_custom" class="hide">
+            <div>
+                <table cellspacing="0">
+                    <tr>
+                        <td width="80">Operator :</td>
+                        <td>
+                            <select id="custom_operator" name="custom_operator" onChange="_toggleOperator('custom', this.value);">
+                                <option value="jscript">jscript</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="operator_jscript" class="show">
+                <table cellspacing="0">
+                    <tr>
+                        <td>
+                        <textarea class="textareaInput" id="jscript_script" name="jscript_script"></textarea></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    ]]></Content>
+</Module>

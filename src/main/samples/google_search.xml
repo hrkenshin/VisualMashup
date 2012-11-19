@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<Module>
+  
+  <ModulePrefs title="Google Map">
+  	<Require feature="setprefs" /> 
+	<Require feature="pubsub-2">
+            <Param name="topics">
+                <![CDATA[
+				<Topic title="aaa2" name="org.apache.shindig.in.message1.__MODULE_ID__"
+                        description="Publish.2011-12-172011-12-17" type="string"
+                        publish="true"/>
+                
+                <Topic title="aaa" name="org.apache.shindig.in.message1.__MODULE_ID__"
+                        description="Subscribes" type="string"
+                        subscribe="true"/>
+                ]]>
+            </Param>
+        </Require>
+  </ModulePrefs>
+  
+  <UserPref name="search_text" datatype="string" default_value="Seoul"/>
+  
+  <Content type="html">
+  <![CDATA[  
+  
+<script src="http://www.google.com/jsapi?key=ABQIAAAAYeVc3w7AbpqkYquu0SOsIhT2yXp_ZAY8_ufC3CFXhHIE1NvwkxTKkbsEE9_85loc6gjegTf6Y0EioA" type="text/javascript"></script>    
+<script language="Javascript" type="text/javascript"> 
+    google.load("search", "1");   
+    function OnLoad() {     
+	    // Create a search control    
+	    searchControl = new google.search.SearchControl();      
+		// Add in a full set of searchers     
+		
+		options = new google.search.SearcherOptions(); 
+		options.setExpandMode(google.search.SearchControl.EXPAND_MODE_OPEN); 
+		searchControl.addSearcher(new google.search.WebSearch(), options); 
+		// Tell the searcher to draw itself and tell it where to attach    
+		searchControl.draw(document.getElementById("searchcontrol"));   
+		// Execute an inital search    
+		searchControl.execute("Google");  
+	}  
+	google.setOnLoadCallback(OnLoad);
+
+	function set_search_text(search_text) {
+		searchControl.execute(search_text);   
+	}
+</script>
+</head>  
+   
+
+	<div id="searchcontrol">Loading...</div> 
+
+  ]]> 
+  </Content>
+</Module>

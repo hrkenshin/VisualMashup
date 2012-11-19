@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <context id="VMTables" targetRuntime="MyBatis3">
+
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/vmdb"
+                        userId="vm"
+                        password="vm00">
+        </jdbcConnection>
+
+        <!-- 모델빈의 위치 및 생성 옵션 -->
+        <javaModelGenerator targetPackage="org.uengine.visualmashup.dao.model"
+                            targetProject="gen-src">
+            <property name="enableSubPackages" value="false"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- SQL Map 파일의 위치 및 생성 옵션 -->
+        <sqlMapGenerator targetPackage="sqlmap.mysql"
+                         targetProject="gen-src">
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+
+        <!-- DAO의 위치 및 생성 옵션 -->
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="org.uengine.visualmashup.dao.mapper"
+                             targetProject="gen-src">
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
+
+        <!-- 소스생성에 필요한 테이블 지정 -->
+        <table schema="vm" tableName="vm_gadgets" domainObjectName="VmGadgets"
+               enableInsert="true" enableSelectByPrimaryKey="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true"
+               enableSelectByExample="true" enableDeleteByExample="false"
+               enableCountByExample="true" enableUpdateByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+            <generatedKey column="seq_no" sqlStatement="MySql" identity="true"/>
+        </table>
+    </context>
+</generatorConfiguration>

@@ -1,0 +1,73 @@
+###############################################################################
+###           Visual Mashup Web Application(with Apache-Shindig)            ###
+###############################################################################
+
+0. 개발 환경
+ - JDK 1.6
+ - Apache-Tomcat 7.0
+ - HSQLDB 2.2.4, MySQL 5.5
+ - Maven 3.0.3
+
+ * 주요 개발 프레임웍
+ - Apache Shindig 3.0.0-beta2
+ - Spring 3.0.5.RELEASE
+ - Jersey 1.9.1 (JAX-RS)
+ - MyBatis 3.0.5
+ - Apache DDLUtils 1.0
+ 
+ - ExtJS 4.0.7
+ - jQuery 1.6.2
+ - WireIt 0.6.0a
+
+1. 주요 쉘 스크립트
+ - build.bat                : 소스 업데이트 -> 컴파일 & .war 파일 패키징
+
+2. 테이블 자동 생성 DDL(Apache DDLUtils)
+ * src/main/resources/schema
+    - ddl_hsql.xml          : HSQLDB 용 DDL 정의
+    - ddl_mysql.xml         : MySQL 용 DDL 정의
+
+3. XML Schema
+ * src/main/resources/schema/mashup
+    - visual-mashup.xsd     : Visual Mashup Protocol Definition Schema.
+ * src/main/resources/schema/gadget
+    - gadgets_v0_9.xsd      : OpenSocial Gadget v0.9 Spec.
+
+4. 주요 프라터티 파일
+ * src/main/filters
+    - dev.properties        : 개발시 빌드 설정 필터
+    - local.properties      : 로컬 개발시 빌드 설정 필터
+    - release.properties    : 운영시 빌드 설정 필터
+
+ * src/main/resource
+    - db.properties         : DB 연결 설정
+    - system.properties     : 시스템 설정
+
+### 초기설치방법 요약(Console모드)
+ * 전제조건 : Apache-Tomcat, Maven 설치
+ * Subversion 소스 첵아웃
+ * 아래의 Profile 프라퍼티 파일을 각 설치 정보에 맞게 수정
+    - src/main/filters/dev.properties       : 개발시 빌드 설정 필터
+    - src/main/filters/local.properties     : 로컬 개발시 빌드 설정 필터
+    - src/main/filters/release.properties   : 운영시 빌드 설정 필터
+ * Project Home 에서 build.bat 실행(빌드 -> war 패키징) : -Dmode 에서 Profie 지정(local, dev, release)
+    주) Profile 지정예 : > build.bat local
+ * 패키징된 target/visual-mashup-1.0-RELEASE.war 파일을 ROOT.war 로 변경 후 TOMCAT_HOME/webapps 에 복사 또는
+   target/visual-mashup-1.0-RELEASE 디렉토리를 ROOT Context 로 지정 후 WAS 시작
+ * http://127.0.0.1:8080 에 접속 확인
+
+### Maven 로컬 개발환경설정 요약(Eclipse Indigo)
+ * 전제조건 :
+    - Apache-Tomcat 7.0, Maven 3.0.3 설치
+    - 이클립스플러그인(wtp, subversive, m2e, m2e-wtp, m2e-subversive) 설치 :
+        m2e, m2e-wtp, m2e-subversive 는 Eclipse Marketplace 에서 검색
+ 1. 이클립스 환경설정 General -> Workspace 의 Text file encoding 을 UTF-8 로 설정
+ 2. 이클립스의 File메뉴 -> Import 실행하여 Maven -> Check out Maven Projects from SCM 으로 프로젝트 생성
+ 3. local profile(default) 설정 필터 파일인 src/main/filters/local.properties 내용 확인 및 환경에 맞게 적절히 수정
+ 4. Project Properties 에서 Web Project Settings 의 Context Root 를 / 로 설정
+ 5. Server View 에서 Tomcat7.0 Runtime 등록후 서버에 visual-mashup 을 추가하여 Server 시작
+ 6. http://127.0.0.1:8080/ 에 접속 확인
+
+### Reference
+ - OpenSocial Gadget Spec. : http://opensocial-resources.googlecode.com/svn/spec/
+ - Google Code Gadget Tutorial : http://code.google.com/intl/ko-KR/apis/gadgets/

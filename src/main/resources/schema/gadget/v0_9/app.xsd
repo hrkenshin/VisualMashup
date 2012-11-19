@@ -1,0 +1,32 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="app">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="gadget" minOccurs="1">
+                    <xs:complexType>
+                        <xs:choice>
+                            <xs:element name="label" minOccurs="0" maxOccurs="unbounded">
+                                <xs:simpleType>
+                                    <xs:union>
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string"/>
+                                        </xs:simpleType>
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:enumeration value="current"/>
+                                                <xs:enumeration value="development"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:union>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="spec" type="xs:anyURI" minOccurs="1"/>
+                        </xs:choice>
+                        <xs:attribute name="version" type="xs:string" use="required"/>
+                        <xs:attribute name="container" type="xs:string" use="optional"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

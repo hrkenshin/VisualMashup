@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<Module>
+    <ModulePrefs title="[__MODULE_ID__] PubSub Subscriber">
+        <Require feature="pubsub-2">
+            <Param name="topics">
+                <![CDATA[
+                <Topic title="message 1" name="org.apache.shindig.in.message1.__MODULE_ID__"
+                        description="Subscribes" type="string"
+                        subscribe="true"/>
+                ]]>
+            </Param>
+            <Param name="topics">
+                <![CDATA[
+                <Topic title="message 2" name="org.apache.shindig.in.message2.__MODULE_ID__"
+                        description="Subscribes" type="string"
+                        subscribe="true"/>
+                ]]>
+            </Param>
+        </Require>
+    </ModulePrefs>
+    <Content type="html">
+        <![CDATA[
+<script>
+var subId1, subId2;
+
+// Example of setting a parameter to the HubClient used by pubsub-2 feature.
+gadgets.HubSettings.params.HubClient.onSecurityAlert = function(alertSource, alertType) {
+  alert("SECURITY ERROR!");
+  window.location.href = "about:blank";
+};
+
+function callback1(topic, data, subscriberData) {
+  document.getElementById("output1").innerHTML =
+    "message : " + gadgets.util.escapeString(data + "") + "<br/>" +
+    "received at: " + (new Date()).toString();
+}
+
+function callback2(topic, data, subscriberData) {
+  document.getElementById("output2").innerHTML =
+    "message : " + gadgets.util.escapeString(data + "") + "<br/>" +
+    "received at: " + (new Date()).toString();
+}
+
+gadgets.HubSettings.onConnect = function() {
+  if(subId1) gadgets.Hub.unsubscribe(subId1);
+  if(subId2) gadgets.Hub.unsubscribe(subId2);
+  subId1 = gadgets.Hub.subscribe("org.apache.shindig.in.message1.__MODULE_ID__", callback1);
+  subId2 = gadgets.Hub.subscribe("org.apache.shindig.in.message2.__MODULE_ID__", callback2);
+}
+</script>
+<body>
+<div>
+</div>
+<div>Message1 : </div>
+<div id="output1"></div>
+<br/>
+<br/>
+<div>Message2 : </div>
+<div id="output2"></div>
+</body>
+]]>
+    </Content>
+</Module>

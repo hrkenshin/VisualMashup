@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<Module>
+  
+  <ModulePrefs title="Google Map">
+  	<Require feature="setprefs" />
+    <Require feature="dynamic-height"/>
+  </ModulePrefs>
+  
+  <UserPref name="city_info" datatype="string" default_value="Seoul"/>
+  <UserPref name="detail_address" datatype="string" default_value="0"/>
+  <UserPref name="position_info" datatype="string" default_value="0"/>
+  
+  <Content type="html">
+  <![CDATA[  
+  	
+	<center>
+	<form name='address_form' action='#' onsubmit='showAddress(this.address.value); return false'>
+	<p>
+	<input type='text' size='50' name='address' />
+	<input type='submit' value='Go!' />
+	</p>
+	<div id='map_canvas' style='width: 580px; height: 880px'></div>
+	</form>
+	</center>
+	 
+	<script src='http://maps.google.com/maps?file=api&amp;v=2.x&amp;key=ABQIAAAA4rFRvfYA39fUlpeKvnQxKBShR3pdKaVexqKVm2FCnEEercXgxBTcgfS3WTLkKygZgPgflXt75Q80jA' type='text/javascript'></script>
+	
+	<script type='text/javascript'>
+	function set_city_info(city_info) {	
+		alert('city_info = ' + city_info);
+		var first_token = city_info.split(' ');
+		document.address_form.address.value=first_token[1];
+		showAddress(first_token[1]);
+	}
+	function set_detail_address(detail_address) {
+		//alert('detail_address = ' + detail_address);
+		document.address_form.address.value=detail_address;
+		showAddress(detail_address);
+	}	
+	
+	var map = null;
+	var geocoder = null;
+	var addr = ['서울 양천구 목3동', '서울 송파구 석촌동', '서울 동대문구 용두동', '서울 광진구 자양동', '서울 양천구 목2동', 'Seoul'];
+	function initialize() {
+		if (GBrowserIsCompatible()) {
+			map = new GMap2(document.getElementById('map_canvas'));
+			map.setCenter(new GLatLng(35.182788,131.308594), 15);
+			geocoder = new GClientGeocoder();
+			
+			var prefs = new gadgets.Prefs();  				
+  			var address = prefs.getString("city_info");
+  			if(address != '') {
+  				set_data_run(decodeURIComponent(address));
+  			}
+		}							
+	}
+
+	function set_data_run(data) {
+		<!--for(var i = 0; i < addr.length; ++i) {			-->
+			<!--showAddress(addr[i]);-->
+		<!--}-->
+		document.address_form.address.value=data;
+		showAddress(data);
+	}
+	
+	function showAddress(address) {
+		if (geocoder) {
+			geocoder.getLatLng(address,
+				function(point) {
+					if (!point) {
+						alert(address + ' not found');
+					} else {						
+						map.setCenter(point, 15);
+						var marker = new GMarker(point);
+						map.addOverlay(marker);
+						marker.openInfoWindowHtml(address);
+					}
+				}
+			);
+		}
+	}
+	
+	initialize();
+	
+	</script> 	
+
+  ]]> 
+  </Content>
+</Module>

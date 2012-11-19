@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
+			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+			http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd
+			http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+    <import resource="applicationContext-mybatis.xml"/>
+
+    <!-- ANNOTATION CONTEXT DEFINITION -->
+    <context:annotation-config/>
+
+    <!-- COMPONENT AUTO-SCAN CONTEXT DEFINITION -->
+    <context:component-scan base-package="org.uengine.visualmashup"/>
+
+    <context:property-placeholder location="classpath:db.properties,classpath:system.properties"/>
+
+    <!-- MESSAGE SOURCE -->
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="cacheSeconds" value="300"/>
+        <property name="useCodeAsDefaultMessage" value="true"/>
+        <property name="basenames">
+            <list>
+                <value>classpath:message</value>
+                <value>classpath:system</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- MessageSource 접근자  설정 -->
+    <bean id="messageSourceAccessor" class="org.springframework.context.support.MessageSourceAccessor">
+        <constructor-arg>
+            <ref local="messageSource"/>
+        </constructor-arg>
+    </bean>
+
+    <!-- ========================= ASPECT CONFIGURATION ======================== -->
+    <aop:config>
+        <aop:advisor pointcut="execution(* *..*Service.*(..))" advice-ref="loggingAdvice"/>
+    </aop:config>
+
+    <aop:config>
+        <aop:advisor pointcut="execution(* *..*Service.*(..))" advice-ref="exceptionAdvice"/>
+    </aop:config>
+
+    <!-- 스프링 프레임웍 AOP : 로깅처리 Advisor 설정 -->
+    <bean id="loggingAdvice" class="org.uengine.visualmashup.common.aop.LoggingAdvice"/>
+
+    <!-- 스프링 프레임웍 AOP : 예외처리 Advisor 설정 -->
+    <bean id="exceptionAdvice" class="org.uengine.visualmashup.common.aop.ExceptionAdvice"/>
+</beans>

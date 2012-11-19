@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE database SYSTEM "http://db.apache.org/torque/dtd/database.dtd">
+<database name="vmdb">
+    <table name="vm_gadgets">
+        <column name="seq_no" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="title" type="VARCHAR" required="false" size="100"/>
+        <column name="title_url" type="VARCHAR" required="false" size="600"/>
+        <column name="description" type="VARCHAR" required="false" size="600"/>
+        <column name="author" type="VARCHAR" required="false" size="100"/>
+        <column name="author_email" type="VARCHAR" required="false" size="100"/>
+        <column name="screenshot" type="VARCHAR" required="false" size="300"/>
+        <column name="thumbnail" type="VARCHAR" required="false" size="300"/>
+        <column name="type" type="CHAR" required="true" size="1"/>
+        <column name="path" type="VARCHAR" required="false" size="600"/>
+        <column name="url" type="VARCHAR" required="false" size="600"/>
+        <column name="xml_contents" type="CLOB" required="false"/>
+    </table>
+</database>

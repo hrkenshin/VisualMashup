@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <context id="VMTables" targetRuntime="MyBatis3">
+
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="org.hsqldb.jdbcDriver"
+                        connectionURL="jdbc:hsqldb:hsql://localhost/vmdb"
+                        userId="sa"
+                        password="">
+        </jdbcConnection>
+
+        <!-- 모델빈의 위치 및 생성 옵션 -->
+        <javaModelGenerator targetPackage="org.uengine.visualmashup.dao.model"
+                            targetProject="gen-src">
+            <property name="enableSubPackages" value="false"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- SQL Map 파일의 위치 및 생성 옵션 -->
+        <sqlMapGenerator targetPackage="sqlmap.hsql"
+                         targetProject="gen-src">
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+
+        <!-- DAO의 위치 및 생성 옵션 -->
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="org.uengine.visualmashup.dao.mapper"
+                             targetProject="gen-src">
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
+
+        <!-- 소스생성에 필요한 테이블 지정 -->
+        <table schema="sa" tableName="vm_gadgets" domainObjectName="VmGadgets"
+               enableInsert="true" enableSelectByPrimaryKey="true"
+               enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true"
+               enableSelectByExample="true" enableDeleteByExample="false"
+               enableCountByExample="true" enableUpdateByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+    </context>
+</generatorConfiguration>
