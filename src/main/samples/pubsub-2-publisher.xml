@@ -26,10 +26,6 @@
             description="Publishes." type="string"
             publish="true">
     </Topic>
-	<Topic title="message2" name="org.apache.shindig.out.message.__MODULE_ID__2"
-            description="Publishes2." type="string"
-            publish="true">
-    </Topic>
     ]]>
   </Param>
 </Require>

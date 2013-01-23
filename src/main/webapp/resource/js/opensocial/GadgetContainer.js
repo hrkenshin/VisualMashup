@@ -106,22 +106,6 @@ Ext.define('VM.opensocial.GadgetContainer', {
             items: Ext.create('VM.opensocial.UploadForm', {})
         }).show();
     },
-    
-    /**
-     * @override
-     * 페이지를 저장하는 윈도우를 오픈한다.
-     */
-    openSavePage: function() {
-        Ext.create('Ext.Window', {
-            title: 'Save Page',
-            resizable: false,
-            closable: true,
-            border: false,
-            modal: true,
-            layout: 'fit',
-            items: Ext.create('VM.opensocial.SavePage', {})
-        }).show();
-    },
 
     /**
      * @override

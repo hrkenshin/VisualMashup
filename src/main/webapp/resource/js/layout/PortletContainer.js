@@ -214,14 +214,6 @@ Ext.define('VM.layout.PortletContainer', {
                             alert(Ext.JSON.encode(me.getPageMetaData()));
                         }
                     }
-                },
-                {
-                    text: 'Save Page',
-                    hidden: me.getXType() != 'gadgetcontainer',
-                    handler: function(item) {
-                    	$("input[name=pageMetaData]").val(Ext.JSON.encode(me.getPageMetaData()));
-                        me.openSavePage();
-                    }
                 }
             ]
         });

@@ -24,9 +24,9 @@
 <script type="text/javascript" src="<c:url value="/resource/lib/WireIt-0.6.0a/js/BezierArrowWire.js"/>"></script>
 
 <!-- ExtJS -->
-<link rel="stylesheet" type="text/css" href="<c:url value="/resource/lib/ext-4.0.2a/resources/css/ext-all.css"/>"/>
-<script type="text/javascript" src="<c:url value="/resource/lib/ext-4.0.2a/bootstrap.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/resource/lib/ext-4.0.2a/locale/ext-lang-ko.js"/>"></script>
+<link rel="stylesheet" type="text/css" href="<c:url value="/resource/lib/ext-4.0.7-gpl/resources/css/ext-all.css"/>"/>
+<script type="text/javascript" src="<c:url value="/resource/lib/ext-4.0.7-gpl/bootstrap.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resource/lib/ext-4.0.7-gpl/locale/ext-lang-ko.js"/>"></script>
 
 <!-- ExtJS : UX -->
 <link rel="stylesheet" type="text/css" href="<c:url value="/resource/lib/ext-4.0.7-gpl/examples/ux/grid/css/GridFilters.css"/>"/>

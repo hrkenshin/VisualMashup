@@ -2,20 +2,7 @@
 <Module>
   
   <ModulePrefs title="Google Map">
-  	<Require feature="setprefs" /> 
-	<Require feature="pubsub-2">
-            <Param name="topics">
-                <![CDATA[
-				<Topic title="aaa2" name="org.apache.shindig.in.message1.__MODULE_ID__"
-                        description="Publish.2011-12-172011-12-17" type="string"
-                        publish="true"/>
-                
-                <Topic title="aaa" name="org.apache.shindig.in.message1.__MODULE_ID__"
-                        description="Subscribes" type="string"
-                        subscribe="true"/>
-                ]]>
-            </Param>
-        </Require>
+  	<Require feature="setprefs" />
   </ModulePrefs>
   
   <UserPref name="search_text" datatype="string" default_value="Seoul"/>
