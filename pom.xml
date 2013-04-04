@@ -155,8 +155,16 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.1.1</version>
-                <!--<configuration>-->
-                    <!--<webResources>-->
+                <configuration>
+                    <webResources>
+						<resource>
+							<!-- Sample Gadget -->
+							<directory>${basedir}/src/main/samples</directory>
+							<targetPath>/samples</targetPath>
+							<includes>
+								<include>*.xml</include>
+							</includes>
+						</resource>
                         <!--<resource>-->
                             <!--&lt;!&ndash; Apache-Shindig Sample &ndash;&gt;-->
                             <!--<directory>${basedir}/src/main/samples/Shindig_3.0.0-beta3</directory>-->
@@ -173,8 +181,8 @@
                                 <!--<include>**/*.*</include>-->
                             <!--</includes>-->
                         <!--</resource>-->
-                    <!--</webResources>-->
-                <!--</configuration>-->
+                    </webResources>
+                </configuration>
             </plugin>
 
             <!-- Jetty Server Plugin -->

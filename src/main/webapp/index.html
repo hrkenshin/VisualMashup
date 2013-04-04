@@ -80,54 +80,69 @@
         ]);
 
         // 페이지 메타데이터 예)
-//        var pageJSON = {
-//            "@id":"gadgetcontainer-1018",
-//            "@title":"테스트페이지",
-//            "@layoutXType":"layout_3_columns",
-//            "@description":"",
-//            "layout":[
-//                {
-//                    "portlet":[
-//                        {
-//                            "@id":"gadget-1051",
-//                            "@xtype":"gadget",
-//                            "initConfig":"{\"xtype\":\"gadget\",\"specUrl\":\"http://127.0.0.1:8080/opensocial/gadgets/20111029231237360001/pubsub-2-publisher.xml\",\"view\":\"home\"}"
-//                        }
-//                    ]
-//                },
-//                {
-//                    "portlet":[
-//                        {
-//                            "@id":"gadget-1073",
-//                            "@xtype":"gadget",
-//                            "initConfig":"{\"xtype\":\"gadget\",\"specUrl\":\"http://127.0.0.1:8080/opensocial/gadgets/20111030001648833000/pubsub-2-subscriber.xml\",\"view\":\"home\"}"
-//                        }
-//                    ]
-//                },
-//                {
-//                    "portlet":[]
-//                }
-//            ],
-//            "pipeline":{
-//                "wire":[
-//                    {
-//                        "from":{
-//                            "@gadgetId":"gadget-1051",
-//                            "@topicName":"org.apache.shindig.out.message.1051"
-//                        },
-//                        "to":{
-//                            "@gadgetId":"gadget-1073",
-//                            "@topicName":"org.apache.shindig.in.message2.1073"
-//                        },
-//                        "transformer":{
-//                            "type":"string",
-//                            "operator":"bypass",
-//                            "param":null
-//                        }
-//                    }
-//                ]
-//            }
-//        };
+        var pageJSON = {
+            "@id":"gadgetcontainer-1018",
+            "@title":"테스트페이지",
+            "@layoutXType":"layout_3_columns",
+            "@description":"",
+            "layout":[
+                {
+                    "portlet":[
+                        {
+                            "@id":"gadget-1051",
+                            "@xtype":"gadget",
+                            "initConfig":"{\"xtype\":\"gadget\",\"specUrl\":\"http://127.0.0.1:8080/samples/pubsub-2-publisher.xml\",\"view\":\"home\"}"
+                        }
+                    ]
+                },
+                {
+                    "portlet":[
+                        {
+                            "@id":"gadget-1073",
+                            "@xtype":"gadget",
+                            "initConfig":"{\"xtype\":\"gadget\",\"specUrl\":\"http://127.0.0.1:8080/samples/pubsub-2-subscriber.xml\",\"view\":\"home\"}"
+                        }
+                    ]
+                },
+                {
+                    "portlet":[
+                        {
+                            "@id":"gadget-1075",
+                            "@xtype":"gadget",
+                            "initConfig":"{\"xtype\":\"gadget\",\"specUrl\":\"http://127.0.0.1:8080/samples/google_maps.xml\",\"view\":\"home\"}"
+                        }
+                    ]
+                },
+                {
+                    "portlet":[
+                        {
+                            "@id":"gadget-1076",
+                            "@xtype":"gadget",
+                            "initConfig":"{\"xtype\":\"gadget\",\"specUrl\":\"http://127.0.0.1:8080/samples/youtube_search.xml\",\"view\":\"home\"}"
+                        }
+                    ]
+                }
+            ],
+            "pipeline":{
+                "wire":[
+                    {
+                        "from":{
+                            "@gadgetId":"gadget-1051",
+                            "@topicName":"org.apache.shindig.out.message.1051"
+                        },
+                        "to":{
+                            "@gadgetId":"gadget-1073",
+                            "@topicName":"org.apache.shindig.in.message2.1073"
+                        },
+                        "transformer":{
+                            "type":"string",
+                            "operator":"bypass",
+                            "param":null
+                        }
+                    }
+                ]
+            }
+        };
 
         Ext.onReady(function() {
             Ext.QuickTips.init();
@@ -138,7 +153,7 @@
                 listeners: {
                     afterrender: function(panel, option) {
                         // 페이지 로드 예)
-//                        gadgetContainer.loadPage(pageJSON);
+                        gadgetContainer.loadPage(pageJSON);
                     }
                 }
             });
